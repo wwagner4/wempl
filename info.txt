@@ -1,0 +1,63 @@
+
+
+## in the image
+# html dir
+/usr/share/nginx/html
+# config file
+/etc/nginx/nginx.conf
+/etc/nginx/conf.d/default.conf
+
+# /etc/nginx/conf.d/default.conf
+# orig
+server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+        proxy_set_header Accept-Encoding "";
+        proxy_pass   http://example.org;
+        subs_filter Example Substituted;
+    }
+
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+# adapted
+server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+        proxy_set_header Accept-Encoding "";
+        proxy_pass   http://example.org;
+        subs_filter {{ HOST }} localhost;
+    }
+
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+
+# install python3
+apk update
+apk add python3
+
+
+
+# image
+cecton/nginx-with-substitution-filter
+
+# build docker
+docker buildx build -t my-nginx .
+
+# run docker
+docker run -v /home/wwagner4/prj/hp-wolfi/pages:/usr/share/nginx/html -d my-nginx
+
+
