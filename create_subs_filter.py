@@ -14,7 +14,7 @@ def copy(fromPath: Path, toPath:Path):
     text = read(fromPath)
     write(toPath, text)
 
-def insert_subs_filter(path:Path):
+def insert_subs_filter(wempl_path:Path, out_path:Path):
 
     def subs_filter(prefix: str, key: str, value: str) -> str:
         return f"{prefix}subs_filter \"{{{{ {key.upper()} }}}}\" {value};"
@@ -26,14 +26,13 @@ def insert_subs_filter(path:Path):
         prefix = "" if first else "        "
         confs.append(subs_filter(prefix, key, os.environ[key]))
         first = False
-    text = read(workPath)
-    write(workPath, text.replace("## SUBS ##", "\n".join(confs)))
+    text = read(wempl_path)
+    write(out_path, text.replace("## SUBS ##", "\n".join(confs)))
 
-path = Path('my-default.conf')
-workPath = Path('work.conf')
-copy(path, workPath)
+path = Path('wempl-default.conf')
+work_path = Path('/tmp/work.conf')
 
-insert_subs_filter(workPath)
+insert_subs_filter(path, work_path)
 print("------------------------------")
-print(f"Result in {workPath.absolute()}")
+print(f"Result in {work_path.absolute()}")
 
