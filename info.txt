@@ -49,7 +49,7 @@ server {
 apk update
 apk add python3
 
-
+CMD ["nginx", "-g", "daemon off;"]
 
 # image
 cecton/nginx-with-substitution-filter
