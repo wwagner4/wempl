@@ -18,7 +18,7 @@ def copy(fromPath: Path, toPath:Path):
 def insert_subs_filter(wempl_path:Path, out_path:Path):
 
     def subs_filter(prefix: str, key: str, value: str) -> str:
-        return f"{prefix}subs_filter \"{{{{ {key.upper()} }}}}\" {value};"
+        return f"{prefix}subs_filter \"{{{{ {key.upper()} }}}}\" \"{value}\";"
 
     keys = [x for x in os.environ.keys() if x.upper()[:6] == 'WEMPL_']
     confs = []
@@ -33,10 +33,9 @@ def insert_subs_filter(wempl_path:Path, out_path:Path):
     write(out_path, text.replace("## SUBS ##", "\n".join(confs)))
 
 path = Path("templates") / 'wempl-default.conf'
-work_path = Path('/tmp/work.conf')
+work_path = Path('/etc/nginx/conf.d/default.conf')
 
 insert_subs_filter(path, work_path)
-print("------------------------------")
 print(f"Result in {work_path.absolute()}")
 cmd = ["nginx", "-g", "daemon off;"]
 # cmd = ["ls", "-l"]
